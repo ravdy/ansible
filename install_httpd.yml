@@ -1,0 +1,23 @@
+--- 
+- name: installing packages
+  hosts: all
+  become: true
+  #  gather_facts: no 
+
+  tasks:
+  - name: installing httpd redhat 
+    yum:
+      name: httpd 
+      state: installed 
+    notify: start httpd services 
+
+  - copy:
+      src: /home/ansadmin/playbooks/index.html
+      dest: /var/www/html
+
+  handlers: 
+  - name: start httpd services
+    service: 
+      name: httpd
+      state: started 
+
