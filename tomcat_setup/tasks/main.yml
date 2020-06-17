@@ -1,0 +1,45 @@
+---
+# tasks file for tomcat_setup
+- name: create user {{ user_name}}
+  user:
+    name: "{{ user_name }}" 
+    state: present 
+
+- name: install java-1.8*
+  yum:
+    name: java
+    state: installed
+
+- name: downloading tomcat packages
+  get_url:
+     url: "{{ tomcat_url }}"
+     dest: /opt
+     mode: 0755
+
+- name: extract packages
+  unarchive:
+    src: /opt/{{ tomcat_package }}.tar.gz
+    dest: /opt
+    remote_src: yes
+
+- name: change permissions on apache-tomcat dir
+  file:
+    path: /opt/{{ tomcat_package }}
+    mode: 0755
+    recurse: yes
+
+- name: creating link file for tomcat startup.sh
+  file:
+    src: /opt/{{ tomcat_package }}/bin/{{item.tomcat_script}}
+    dest: /usr/local/bin/{{item.tomcat_command}}
+    state: link
+  loop:
+    - { tomcat_script: startup.sh, tomcat_command: tomcatup }
+    - { tomcat_script: shutdown.sh, tomcat_command: tomcatdown }
+  notify: start tomcat
+
+- name: change port number
+  copy:
+    src: server.xml
+    dest: /opt/{{ tomcat_package }}/conf/server.xml
+  notify: restart tomcat
