@@ -43,3 +43,8 @@
     src: server.xml
     dest: /opt/{{ tomcat_package }}/conf/server.xml
   notify: restart tomcat
+
+- name: copy war file
+  copy: 
+    src: webapp.war
+    dest: /opt/{{ tomcat_package }}/webapps

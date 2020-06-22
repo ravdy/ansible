@@ -1,9 +1,16 @@
+[ungrouped]
+localhost  ansible_connection=local
+
 [webservers]
-172.31.38.215
+rhelserver ansible_host=172.31.38.215
 172.31.38.13
 
 [appservers]
-172.31.39.126
-172.31.39.100
-
+172.31.39.[100:106]
 localhost
+
+[jenkins]
+172.31.38.215
+
+[tomcat]
+172.31.8.250
